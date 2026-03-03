@@ -15,6 +15,8 @@ import { $fetch } from 'ofetch'
 import { getGitDiff, loadChangelogConfig, parseCommits, generateMarkDown } from 'changelogen'
 
 const REPO = 'npmx-dev/npmx.dev'
+const MAX_RELEASE_BODY_LENGTH = 120_000
+const MAX_CONTRIBUTOR_LOOKUPS = 100
 
 interface Contributor {
   name: string
@@ -29,7 +31,9 @@ async function resolveContributors(
   const seenUsernames = new Set<string>()
   const token = process.env.GITHUB_TOKEN
 
+  let lookups = 0
   for (const commit of rawCommits) {
+    if (lookups >= MAX_CONTRIBUTOR_LOOKUPS) break
     if (
       seenEmails.has(commit.author.email) ||
       commit.author.name.endsWith('[bot]') ||
@@ -38,6 +42,7 @@ async function resolveContributors(
       continue
     }
     seenEmails.add(commit.author.email)
+    lookups++
 
     try {
       const data = await $fetch<{ author: { login: string } | null }>(
@@ -86,8 +91,20 @@ async function main() {
 
   if (contributors.length > 0) {
     const lines = contributors.map(c => `- ${c.name} (@${c.username})`).join('\n')
-
     output += `\n\n### ❤️ Contributors\n\n${lines}`
+  }
+
+  // Truncate if too long for GitHub Release body (125K limit)
+  if (output.length > MAX_RELEASE_BODY_LENGTH) {
+    const compareUrl = `https://github.com/${REPO}/compare/${from}...${to === 'HEAD' ? 'release' : to}`
+    output =
+      `> This release includes ${rawCommits.length} commits. The full changelog is too large to display here.\n>\n` +
+      `> [View full diff on GitHub](${compareUrl})\n`
+
+    if (contributors.length > 0) {
+      const lines = contributors.map(c => `- ${c.name} (@${c.username})`).join('\n')
+      output += `\n### ❤️ Contributors\n\n${lines}`
+    }
   }
 
   console.log(output)
