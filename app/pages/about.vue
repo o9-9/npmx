@@ -119,14 +119,17 @@ function computePos(btn: HTMLElement) {
 // DON'T MOVE aria-expanded to the template, Firefox performance issues
 function setActiveBtnExpanded(btn: HTMLElement | null, value: boolean) {
   if (activeBtnDom && activeBtnDom !== btn) {
+    activeBtnDom.removeAttribute('aria-controls')
     activeBtnDom.removeAttribute('aria-expanded')
   }
   activeBtnDom = btn
   if (btn) {
     if (value) {
       btn.setAttribute('aria-expanded', 'true')
+      btn.setAttribute('aria-controls', 'contributor-popover')
     } else {
       btn.removeAttribute('aria-expanded')
+      btn.removeAttribute('aria-controls')
     }
   }
 }
@@ -491,6 +494,7 @@ onBeforeUnmount(() => {
                 <button
                   v-else
                   type="button"
+                  aria-haspopup="true"
                   :data-cid="contributor.id"
                   :aria-label="contributor.login"
                   class="group relative block h-12 w-12 rounded-lg transition-transform duration-200 outline-none p-0 border-none cursor-pointer bg-transparent"
@@ -514,6 +518,7 @@ onBeforeUnmount(() => {
     <Transition name="pop">
       <div
         v-if="activeContributor"
+        id="contributor-popover"
         ref="panelRef"
         data-popover-panel
         role="group"
