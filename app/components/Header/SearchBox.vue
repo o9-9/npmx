@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { debounce } from 'perfect-debounce'
-import { normalizeSearchParam } from '#shared/utils/url'
-
 withDefaults(
   defineProps<{
     inputClass?: string
@@ -12,80 +9,23 @@ withDefaults(
 )
 
 const emit = defineEmits(['blur', 'focus'])
-
-const router = useRouter()
 const route = useRoute()
-const { searchProvider } = useSearchProvider()
-const searchProviderValue = computed(() => {
-  const p = normalizeSearchParam(route.query.p)
-  if (p === 'npm' || searchProvider.value === 'npm') return 'npm'
-  return 'algolia'
-})
-
 const isSearchFocused = shallowRef(false)
 
 const showSearchBar = computed(() => {
   return route.name !== 'index'
 })
 
-const searchQuery = useGlobalSearchQuery()
-
-// Pages that have their own local filter using ?q
-const pagesWithLocalFilter = new Set(['~username', 'org'])
-
-function updateUrlQueryImpl(value: string, provider: 'npm' | 'algolia') {
-  // Don't navigate away from pages that use ?q for local filtering
-  if (pagesWithLocalFilter.has(route.name as string)) {
-    return
-  }
-  if (route.name === 'search') {
-    router.replace({ query: { q: value || undefined, p: provider === 'npm' ? 'npm' : undefined } })
-    return
-  }
-  if (!value) {
-    return
-  }
-
-  router.push({
-    name: 'search',
-    query: {
-      q: value,
-      p: provider === 'npm' ? 'npm' : undefined,
-    },
-  })
-}
-
-const updateUrlQueryNpm = debounce(updateUrlQueryImpl, 250)
-const updateUrlQueryAlgolia = debounce(updateUrlQueryImpl, 80)
-
-const updateUrlQuery = Object.assign(
-  (value: string) =>
-    (searchProviderValue.value === 'algolia' ? updateUrlQueryAlgolia : updateUrlQueryNpm)(
-      value,
-      searchProviderValue.value,
-    ),
-  {
-    flush: () =>
-      (searchProviderValue.value === 'algolia' ? updateUrlQueryAlgolia : updateUrlQueryNpm).flush(),
-  },
-)
-
-watch(searchQuery, value => {
-  updateUrlQuery(value)
-})
+const { model: searchQuery, startSearch } = useGlobalSearch('header')
+const hasSearchQuery = computed(() => searchQuery.value.trim().length > 0)
 
 function handleSubmit() {
-  if (pagesWithLocalFilter.has(route.name as string)) {
-    router.push({
-      name: 'search',
-      query: {
-        q: searchQuery.value,
-        p: searchProviderValue.value === 'npm' ? 'npm' : undefined,
-      },
-    })
-  } else {
-    updateUrlQuery.flush()
-  }
+  startSearch()
+}
+
+function clearSearch() {
+  searchQuery.value = ''
+  inputRef.value?.focus()
 }
 
 // Expose focus method for parent components
@@ -118,11 +58,21 @@ defineExpose({ focus })
             name="q"
             :placeholder="$t('search.placeholder')"
             no-correct
-            class="w-full min-w-25 ps-7"
+            class="w-full min-w-25 ps-7 pe-8"
             @focus="isSearchFocused = true"
             @blur="isSearchFocused = false"
             size="small"
           />
+          <button
+            v-if="hasSearchQuery"
+            type="button"
+            class="absolute inset-ie-2 h-6 w-6 items-center justify-center rounded text-fg-muted hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent group-focus-within:flex group-hover:inline-flex hidden"
+            @click="clearSearch"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+            <span class="i-lucide:circle-x h-4 w-4" />
+          </button>
           <button type="submit" class="sr-only">{{ $t('search.button') }}</button>
         </div>
       </div>

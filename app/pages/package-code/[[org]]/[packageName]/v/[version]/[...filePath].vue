@@ -13,6 +13,7 @@ definePageMeta({
     '/package/code/:packageName/v/:version/:filePath(.*)?',
     // '/code/@:org?/:packageName/v/:version/:filePath(.*)?',
   ],
+  scrollMargin: 160,
 })
 
 const route = useRoute('code')
@@ -248,6 +249,19 @@ function copyPermalinkUrl() {
   copyPermalink(url.toString())
 }
 
+const { copied: fileContentCopied, copy: copyFileContent } = useClipboard({
+  source: () => fileContent.value?.content || '',
+  copiedDuring: 2000,
+})
+
+// Scroll to top of file content
+const contentContainer = useTemplateRef('contentContainer')
+function scrollToTop() {
+  if (contentContainer.value) {
+    contentContainer.value.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
 // Canonical URL for this code page
 const canonicalUrl = computed(() => `https://npmx.dev${getCodeUrl(route.params)}`)
 
@@ -256,12 +270,12 @@ const markdownViewModes = [
   {
     key: 'preview',
     label: $t('code.markdown_view_mode.preview'),
-    icon: 'i-carbon-view',
+    icon: 'i-lucide:eye',
   },
   {
     key: 'code',
     label: $t('code.markdown_view_mode.code'),
-    icon: 'i-carbon-code',
+    icon: 'i-lucide:code',
   },
 ] as const
 
@@ -409,6 +423,7 @@ defineOgImageComponent('Default', {
       <!-- File content / Directory listing - sticky with internal scroll on desktop -->
       <div
         class="flex-1 min-w-0 overflow-x-hidden sticky top-28 self-start h-[calc(100vh-7rem)] overflow-y-auto"
+        ref="contentContainer"
       >
         <!-- File viewer -->
         <template v-if="isViewingFile && fileContent">
@@ -449,12 +464,32 @@ defineOgImageComponent('Default', {
             </div>
             <div class="flex items-center gap-2">
               <button
+                type="button"
+                class="px-2 py-1 font-mono text-xs text-fg-muted bg-bg-subtle border border-border rounded hover:text-fg hover:border-border-hover transition-colors items-center inline-flex gap-1"
+                @click="scrollToTop"
+              >
+                <span class="i-lucide:arrow-up w-3 h-3" />
+                {{ $t('code.scroll_to_top') }}
+              </button>
+              <button
                 v-if="selectedLines"
                 type="button"
                 class="px-2 py-1 font-mono text-xs text-fg-muted bg-bg-subtle border border-border rounded hover:text-fg hover:border-border-hover transition-colors active:scale-95"
                 @click="copyPermalinkUrl"
               >
                 {{ permalinkCopied ? $t('common.copied') : $t('code.copy_link') }}
+              </button>
+              <button
+                v-if="!!fileContent?.content"
+                type="button"
+                class="px-2 py-1 font-mono text-xs text-fg-muted bg-bg-subtle border border-border rounded hover:text-fg hover:border-border-hover transition-colors inline-flex items-center gap-1 capitalize"
+                @click="copyFileContent()"
+              >
+                <span
+                  class="w-3 h-3"
+                  :class="fileContentCopied ? 'i-lucide:check' : 'i-lucide:file'"
+                />
+                {{ fileContentCopied ? $t('common.copied') : $t('common.copy') }}
               </button>
               <a
                 :href="`https://cdn.jsdelivr.net/npm/${packageName}@${version}/${filePath}`"
@@ -463,7 +498,7 @@ defineOgImageComponent('Default', {
                 class="px-2 py-1 font-mono text-xs text-fg-muted bg-bg-subtle border border-border rounded hover:text-fg hover:border-border-hover transition-colors inline-flex items-center gap-1"
               >
                 {{ $t('code.raw') }}
-                <span class="i-carbon:launch w-3 h-3" />
+                <span class="i-lucide:external-link w-3 h-3" />
               </a>
             </div>
           </div>
@@ -486,7 +521,7 @@ defineOgImageComponent('Default', {
 
         <!-- File too large warning -->
         <div v-else-if="isViewingFile && isFileTooLarge" class="py-20 text-center">
-          <div class="i-carbon:document w-12 h-12 mx-auto text-fg-subtle mb-4" />
+          <div class="i-lucide:file-text w-12 h-12 mx-auto text-fg-subtle mb-4" />
           <p class="text-fg-muted mb-2">{{ $t('code.file_too_large') }}</p>
           <p class="text-fg-subtle text-sm mb-4">
             {{
@@ -541,7 +576,7 @@ defineOgImageComponent('Default', {
 
         <!-- Error loading file -->
         <div v-else-if="filePath && fileStatus === 'error'" class="py-20 text-center" role="alert">
-          <div class="i-carbon:warning-alt w-8 h-8 mx-auto text-fg-subtle mb-4" />
+          <div class="i-lucide:circle-alert w-8 h-8 mx-auto text-fg-subtle mb-4" />
           <p class="text-fg-muted mb-2">{{ $t('code.failed_to_load') }}</p>
           <p class="text-fg-subtle text-sm mb-4">{{ $t('code.unavailable_hint') }}</p>
           <LinkBase

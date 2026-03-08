@@ -27,17 +27,17 @@ const canGoBack = useCanGoBack()
           </h1>
           <button
             type="button"
-            class="cursor-pointer inline-flex items-center gap-2 font-mono text-sm text-fg-muted hover:text-fg transition-colors duration-200 rounded shrink-0"
+            class="cursor-pointer inline-flex items-center gap-2 p-1.5 -mx-1.5 font-mono text-sm text-fg-muted hover:text-fg transition-colors duration-200 rounded shrink-0"
             @click="router.back()"
             v-if="canGoBack"
           >
-            <span class="i-carbon:arrow-left rtl-flip w-4 h-4" aria-hidden="true" />
+            <span class="i-lucide:arrow-left rtl-flip w-4 h-4" aria-hidden="true" />
             <span class="sr-only sm:not-sr-only">{{ $t('nav.back') }}</span>
           </button>
         </div>
       </header>
 
-      <section class="prose prose-invert max-w-none space-y-8">
+      <section class="max-w-none space-y-8">
         <p class="text-fg-muted leading-relaxed">
           <i18n-t keypath="a11y.welcome" tag="span" scope="global">
             <template #app>
@@ -132,7 +132,7 @@ const canGoBack = useCanGoBack()
                   class="inline-flex items-center gap-1 text-fg-muted hover:text-fg underline decoration-fg-subtle/50 hover:decoration-fg"
                 >
                   {{ $t('a11y.contact.link') }}
-                  <span class="i-carbon:launch rtl-flip w-4 h-4" aria-hidden="true" />
+                  <span class="i-lucide:external-link rtl-flip w-4 h-4" aria-hidden="true" />
                 </a>
               </template>
             </i18n-t>

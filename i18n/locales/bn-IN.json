@@ -271,8 +271,7 @@
       "items": {}
     },
     "downloads": {
-      "title": "সাপ্তাহিক ডাউনলোড",
-      "analyze": "ডাউনলোড বিশ্লেষণ করুন"
+      "title": "সাপ্তাহিক ডাউনলোড"
     },
     "install_scripts": {
       "title": "ইনস্টল স্ক্রিপ্ট",
@@ -360,9 +359,6 @@
   "connector": {
     "modal": {
       "title": "স্থানীয় কনেক্টর",
-      "contributor_badge": "কন্ট্রিবিউটারদের জন্য মাত্র",
-      "contributor_notice": "কনেক্টর এখনো npm এ প্রকাশিত হয়নি। স্থানীয়ভাবে চালানোর জন্য {link} দেখুন।",
-      "contributor_link": "অবদানের নির্দেশনা",
       "connected": "সংযুক্ত হয়েছে",
       "connected_as_user": "~{user} হিসাবে সংযুক্ত",
       "connected_hint": "এখন আপনি ওয়েব UI থেকে প্যাকেজ এবং সংস্থাগুলি পরিচালনা করতে পারবেন।",
@@ -658,7 +654,6 @@
       "paginated": "পাতায়িত",
       "items_per_page": "প্রতি পাতায় আইটেম",
       "per_page": "{count} / পাতায়",
-      "all_yolo": "সব (YOLO)",
       "showing": "{total} এর মধ্যে {start}-{end}",
       "previous": "আগের পাতা",
       "next": "পরের পাতা",
@@ -702,6 +697,7 @@
         "managers": "ম্যানেজার"
       }
     },
+    "team": {},
     "contributors": {
       "title": "অবদানকারী",
       "description": "npmx সম্পূর্ণ ওপেন সোর্স, অসাধারণ অবদানকারীদের কমিউনিটি দ্বারা নির্মিত। আমাদের সাথে যোগ দিন এবং একসাথে আমাদের সবসময় চাওয়া npm ব্রাউজিং অভিজ্ঞতা তৈরি করি।",
@@ -847,5 +843,11 @@
     "your_rights": {},
     "contact": {},
     "changes": {}
+  },
+  "a11y": {
+    "approach": {},
+    "measures": {},
+    "limitations": {},
+    "contact": {}
   }
 }

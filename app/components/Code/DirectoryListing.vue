@@ -85,7 +85,6 @@ const bytesFormatter = useBytesFormatter()
               <svg
                 class="size-[1em] me-1 shrink-0 text-yellow-600"
                 viewBox="0 0 16 16"
-                fill="currentColor"
                 aria-hidden="true"
               >
                 <use :href="`/file-tree-sprite.svg#${ADDITIONAL_ICONS['folder']}`" />
@@ -110,7 +109,6 @@ const bytesFormatter = useBytesFormatter()
               <svg
                 class="size-[1em] me-1 shrink-0"
                 viewBox="0 0 16 16"
-                fill="currentColor"
                 :class="node.type === 'directory' ? 'text-yellow-600' : undefined"
                 aria-hidden="true"
               >
@@ -120,10 +118,7 @@ const bytesFormatter = useBytesFormatter()
               </svg>
               <span class="w-full flex justify-self-stretch items-center gap-2">
                 <span class="flex-1">{{ node.name }}</span>
-                <span
-                  v-if="node.type === 'file' && node.size"
-                  class="text-end text-xs text-fg-subtle"
-                >
+                <span v-if="typeof node.size === 'number'" class="text-end text-xs text-fg-subtle">
                   {{ bytesFormatter.format(node.size) }}
                 </span>
               </span>
