@@ -312,7 +312,15 @@ defineOgImage(
     version: () => version.value,
     variant: 'code-tree',
   },
-  [{ key: 'og' }, { key: 'whatsapp', width: 800, height: 800 }],
+  [
+    { key: 'og', alt: () => `Source code file tree for ${packageName.value}@${version.value}` },
+    {
+      key: 'whatsapp',
+      width: 800,
+      height: 800,
+      alt: () => `Source code file tree for ${packageName.value}@${version.value}`,
+    },
+  ],
 )
 </script>
 

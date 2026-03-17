@@ -128,10 +128,14 @@ useSeoMeta({
   twitterDescription: () => `npm packages maintained by ${username.value}`,
 })
 
-defineOgImage('Page.takumi', {
-  title: () => `~${username.value}`,
-  description: () => (results.value ? `${results.value.total} packages` : 'npm user profile'),
-})
+defineOgImage(
+  'Page.takumi',
+  {
+    title: () => `~${username.value}`,
+    description: () => (results.value ? `${results.value.total} packages` : 'npm user profile'),
+  },
+  { alt: () => `~${username.value} npm user profile on npmx` },
+)
 </script>
 
 <template>

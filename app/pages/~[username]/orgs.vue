@@ -108,16 +108,20 @@ useSeoMeta({
   twitterDescription: () => `npm organizations for ${username.value}`,
 })
 
-defineOgImage('Page.takumi', {
-  title: () => `@${username.value}`,
-  description: () => {
-    if (isLoading.value) return 'npm organizations'
-    if (orgs.value.length === 0) return 'No organizations found'
+defineOgImage(
+  'Page.takumi',
+  {
+    title: () => `@${username.value}`,
+    description: () => {
+      if (isLoading.value) return 'npm organizations'
+      if (orgs.value.length === 0) return 'No organizations found'
 
-    const count = orgs.value.length
-    return `${count} ${count === 1 ? 'organization' : 'organizations'}`
+      const count = orgs.value.length
+      return `${count} ${count === 1 ? 'organization' : 'organizations'}`
+    },
   },
-})
+  { alt: () => `Organizations for @${username.value} on npmx` },
+)
 </script>
 
 <template>

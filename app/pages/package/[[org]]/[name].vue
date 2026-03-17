@@ -42,7 +42,15 @@ defineOgImage(
     version: () => requestedVersion.value,
     variant: 'download-chart',
   },
-  [{ key: 'og' }, { key: 'whatsapp', width: 800, height: 800 }],
+  [
+    { key: 'og', alt: () => `npm package ${packageName.value} download chart and stats` },
+    {
+      key: 'whatsapp',
+      width: 800,
+      height: 800,
+      alt: () => `npm package ${packageName.value} download chart and stats`,
+    },
+  ],
 )
 
 if (import.meta.server) {

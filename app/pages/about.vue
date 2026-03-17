@@ -15,10 +15,14 @@ useSeoMeta({
   twitterDescription: () => $t('about.meta_description'),
 })
 
-defineOgImage('Page.takumi', {
-  title: () => `${$t('about.title')}`,
-  description: 'a fast, modern browser for the npm registry',
-})
+defineOgImage(
+  'Page.takumi',
+  {
+    title: () => `${$t('about.title')}`,
+    description: 'a fast, modern browser for the npm registry',
+  },
+  { alt: () => `${$t('about.title')} — npmx` },
+)
 
 const pmLinks = {
   npm: 'https://www.npmjs.com/',

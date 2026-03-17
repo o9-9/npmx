@@ -571,14 +571,21 @@ useSeoMeta({
       : $t('search.meta_description_packages'),
 })
 
-defineOgImage('Page.takumi', {
-  title: () =>
-    `${query.value ? $t('search.title_search', { search: query.value }) : $t('search.title_packages')} - npmx`,
-  description: () =>
-    query.value
-      ? $t('search.meta_description', { search: query.value })
-      : $t('search.meta_description_packages'),
-})
+defineOgImage(
+  'Page.takumi',
+  {
+    title: () =>
+      `${query.value ? $t('search.title_search', { search: query.value }) : $t('search.title_packages')} - npmx`,
+    description: () =>
+      query.value
+        ? $t('search.meta_description', { search: query.value })
+        : $t('search.meta_description_packages'),
+  },
+  {
+    alt: () =>
+      query.value ? `Search results for "${query.value}" on npmx` : 'Search npm packages on npmx',
+  },
+)
 
 // -----------------------------------
 // Live region debouncing logic

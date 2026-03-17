@@ -19,7 +19,7 @@ useSeoMeta({
   twitterDescription: () => $t('seo.home.description'),
 })
 
-defineOgImage('Splash.takumi')
+defineOgImage('Splash.takumi', {}, { alt: () => $t('seo.home.description') })
 </script>
 
 <template>

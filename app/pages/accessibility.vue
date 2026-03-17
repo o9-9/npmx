@@ -8,10 +8,14 @@ useSeoMeta({
   description: () => $t('a11y.welcome', { app: 'npmx' }),
 })
 
-defineOgImage('Page.takumi', {
-  title: () => $t('a11y.title'),
-  description: () => $t('a11y.welcome', { app: 'npmx' }),
-})
+defineOgImage(
+  'Page.takumi',
+  {
+    title: () => $t('a11y.title'),
+    description: () => $t('a11y.welcome', { app: 'npmx' }),
+  },
+  { alt: () => `${$t('a11y.title')} — npmx` },
+)
 
 const router = useRouter()
 const canGoBack = useCanGoBack()

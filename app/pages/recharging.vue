@@ -12,9 +12,13 @@ useSeoMeta({
   twitterDescription: () => $t('vacations.meta_description'),
 })
 
-defineOgImage('Page.takumi', {
-  title: () => $t('vacations.title'),
-})
+defineOgImage(
+  'Page.takumi',
+  {
+    title: () => $t('vacations.title'),
+  },
+  { alt: () => `${$t('vacations.title')} — npmx` },
+)
 
 const router = useRouter()
 const canGoBack = useCanGoBack()

@@ -128,7 +128,7 @@ if (import.meta.client) {
 
 // title and description will be inferred
 // this will be overridden by upstream pages that use different templates
-defineOgImage('Page.takumi')
+defineOgImage('Page.takumi', {}, { alt: 'npmx — a fast, modern browser for the npm registry' })
 </script>
 
 <template>
