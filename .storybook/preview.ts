@@ -15,7 +15,7 @@ globalThis['__NUXT_COLOR_MODE__'] ??= {
   removeColorScheme: fn(),
 }
 // @ts-expect-error - dynamic global name
-globalThis.defineOgImageComponent = fn()
+globalThis.defineOgImage = fn()
 
 const preview: Preview = {
   parameters: {

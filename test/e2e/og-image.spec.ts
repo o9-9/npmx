@@ -27,6 +27,9 @@ const testCases = [
     label: 'extremely long name',
   },
 
+  // Blog post OG image template
+  { path: '/blog/alpha-release', label: 'blog post' },
+
   // Package code-tree variant (file tree decoration)
   { path: '/package-code/vue/v/3.5.27', label: 'code-tree variant' },
 

@@ -16,7 +16,6 @@ const KIND_ICONS: Record<string, string> = {
 import type { JsDelivrFileNode } from '#shared/types'
 import { joinURL } from 'ufo'
 import { smoothPath, useCharts } from '~/composables/useCharts'
-import { useSiteConfig } from '#site-config/app/composables'
 
 const { name, version, variant } = defineProps<{
   name: string
@@ -63,8 +62,6 @@ const totalLikes = shallowRef(0)
 const formattedLikes = computed(() =>
   totalLikes.value ? compactFormat.format(totalLikes.value) : '',
 )
-
-const { name: siteName } = useSiteConfig()
 
 const pkgNameParts = computed(() => {
   const n = pkg.value?.name
@@ -234,20 +231,9 @@ const sparklineSrc = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col justify-center w-full bg-bg text-fg relative overflow-hidden font-sans">
-    <div class="absolute -top-10 force-left-12 size-[700px] rounded-full blur-3xl bg-fg/3" />
-
-    <div class="p-15 flex flex-col gap-12">
-      <div class="flex gap-4">
-        <img
-          src="/logo-icon.svg"
-          width="60"
-          height="60"
-          alt="npmx logo"
-          class="w-[60px] h-[60px]"
-        />
-        <h1 class="text-5xl tracking-tighter font-mono">{{ siteName }}</h1>
-      </div>
+  <OgLayout>
+    <div class="px-15 py-12 flex flex-col justify-center gap-12 h-full">
+      <OgBrand :height="48" />
 
       <div class="flex flex-col max-w-full gap-3">
         <div
@@ -277,7 +263,10 @@ const sparklineSrc = computed(() => {
 
       <div class="flex items-center gap-5 text-4xl text-fg-muted">
         <div v-if="repositoryUrl" class="flex items-center gap-2">
-          <div class="i-simple-icons:github w-8 h-8 text-fg-muted" />
+          <div
+            class="i-simple-icons:github shrink-0 text-fg-muted"
+            :style="{ width: '32px', height: '32px' }"
+          />
           <span v-if="repoRef" class="max-w-[500px]" :style="{ textOverflow: 'ellipsis' }">
             {{ repoRef.owner }}<span class="opacity-50">/</span>{{ repoRef.repo }}
           </span>
@@ -285,12 +274,18 @@ const sparklineSrc = computed(() => {
         </div>
 
         <span v-if="formattedStars" class="flex items-center gap-2" data-testid="stars">
-          <div class="i-lucide:star w-8 h-8 text-fg-muted" :style="{ fill: 'white' }" />
+          <div
+            class="i-lucide:star shrink-0 text-fg-muted"
+            :style="{ width: '32px', height: '32px', fill: 'white' }"
+          />
           <span>{{ formattedStars }}</span>
         </span>
 
         <span v-if="formattedLikes" class="flex items-center gap-2" data-testid="likes">
-          <div class="i-lucide:heart w-8 h-8 text-fg-muted" :style="{ fill: 'white' }" />
+          <div
+            class="i-lucide:heart shrink-0 text-fg-muted"
+            :style="{ width: '32px', height: '32px', fill: 'white' }"
+          />
           <span>{{ formattedLikes }}</span>
         </span>
 
@@ -299,7 +294,10 @@ const sparklineSrc = computed(() => {
           class="flex items-center gap-2"
           data-testid="license"
         >
-          <div class="i-lucide:scale w-8 h-8 text-fg-subtle flex-shrink-0 self-center" />
+          <div
+            class="i-lucide:scale shrink-0 text-fg-subtle self-center"
+            :style="{ width: '32px', height: '32px' }"
+          />
           <span>{{ pkg.license }}</span>
         </div>
       </div>
@@ -380,5 +378,5 @@ const sparklineSrc = computed(() => {
         }}</span>
       </div>
     </div>
-  </div>
+  </OgLayout>
 </template>

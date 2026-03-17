@@ -13,10 +13,9 @@ useSeoMeta({
   twitterDescription: () => $t('pds.meta_description'),
 })
 
-defineOgImageComponent('Default', {
-  primaryColor: '#60a5fa',
+defineOgImage('Page.takumi', {
   title: 'npmx.social',
-  description: 'The official **PDS** for the npmx community.',
+  description: 'The official PDS for the npmx community.',
 })
 
 const brokenImages = ref(new Set<string>())
