@@ -1,8 +1,11 @@
 <script setup>
+import { useClipboard } from '@vueuse/core'
+
 const pkg = useState('badge-pkg', () => 'nuxt')
 const type = useState('badge-type', () => 'version')
 const isValid = ref(true)
-const copied = ref(false)
+
+const { copy, copied } = useClipboard({ copiedDuring: 2000 })
 
 const types = [
   'version',
@@ -42,15 +45,7 @@ const formatLabel = str => {
 
 const copyToClipboard = async () => {
   const markdown = `[![Open on npmx.dev](https://npmx.dev/api/registry/badge/${type.value}/${pkg.value})](https://npmx.dev/package/${pkg.value})`
-  try {
-    await navigator.clipboard.writeText(markdown)
-    copied.value = true
-    setTimeout(() => {
-      copied.value = false
-    }, 2000)
-  } catch {
-    console.error('Failed to copy to clipboard')
-  }
+  copy(markdown)
 }
 </script>
 
