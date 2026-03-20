@@ -86,12 +86,19 @@ export function transformPackument(
       const trustLevel = getTrustLevel(version)
       const hasProvenance = trustLevel !== 'none'
 
+      // Normalize license: some versions use { type: "MIT" } instead of "MIT"
+      let versionLicense = version.license
+      if (versionLicense && typeof versionLicense === 'object' && 'type' in versionLicense) {
+        versionLicense = (versionLicense as { type: string }).type
+      }
+
       filteredVersions[v] = {
         hasProvenance,
         trustLevel,
         version: version.version,
         deprecated: version.deprecated,
         tags: version.tags as string[],
+        license: typeof versionLicense === 'string' ? versionLicense : undefined,
       }
     }
   }

@@ -426,7 +426,8 @@
       "size_increase": "Install size increased by {percent}% ({size})",
       "size_decrease": "Install size decreased by {percent}% ({size})",
       "dep_increase": "{count} dependencies added",
-      "dep_decrease": "{count} dependencies removed"
+      "dep_decrease": "{count} dependencies removed",
+      "license_change": "License changed from {from} to {to}"
     },
     "dependencies": {
       "title": "Dependency ({count}) | Dependencies ({count})",

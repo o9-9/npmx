@@ -1284,6 +1284,9 @@
             },
             "dep_decrease": {
               "type": "string"
+            },
+            "license_change": {
+              "type": "string"
             }
           },
           "additionalProperties": false

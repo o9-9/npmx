@@ -147,6 +147,27 @@ const sizeEvents = computed(() => {
   return events
 })
 
+// Detect license changes between consecutive versions
+const licenseChanges = computed(() => {
+  const changes = new Map<string, { from: string; to: string }>()
+  const entries = timelineEntries.value
+
+  for (let i = 0; i < entries.length - 1; i++) {
+    const current = pkg.value?.versions[entries[i]!.version]
+    const previous = pkg.value?.versions[entries[i + 1]!.version]
+    if (!current || !previous) continue
+
+    const currentLicense = current.license ?? 'Unknown'
+    const previousLicense = previous.license ?? 'Unknown'
+
+    if (currentLicense !== previousLicense) {
+      changes.set(entries[i]!.version, { from: previousLicense, to: currentLicense })
+    }
+  }
+
+  return changes
+})
+
 const bytesFormatter = useBytesFormatter()
 
 useSeoMeta({
@@ -190,12 +211,12 @@ useSeoMeta({
                 aria-hidden="true"
               />
             </span>
-            <div
-              class="border rounded-lg px-3 py-2 text-sm"
+            <p
+              class="text-sm"
               :class="
                 sizeEvents.get(entry.version)!.direction === 'decrease'
-                  ? 'border-green-600/40 bg-green-500/10 text-green-800 dark:text-green-400'
-                  : 'border-amber-600/40 bg-amber-500/10 text-amber-800 dark:text-amber-400'
+                  ? 'text-green-700 dark:text-green-400'
+                  : 'text-amber-700 dark:text-amber-400'
               "
             >
               <template v-if="sizeEvents.get(entry.version)!.sizeThresholdExceeded">
@@ -234,7 +255,23 @@ useSeoMeta({
                       })
                 }}
               </template>
-            </div>
+            </p>
+          </div>
+          <!-- License change -->
+          <div v-if="licenseChanges.has(entry.version)" class="mb-4 -ms-6 ps-6 relative">
+            <span
+              class="absolute -start-2 flex items-center justify-center w-4 h-4 rounded-full border bg-amber-500 border-amber-600"
+            >
+              <span class="w-2.5 h-2.5 text-white i-lucide:scale" aria-hidden="true" />
+            </span>
+            <p class="text-sm text-amber-700 dark:text-amber-400">
+              {{
+                $t('package.timeline.license_change', {
+                  from: licenseChanges.get(entry.version)!.from,
+                  to: licenseChanges.get(entry.version)!.to,
+                })
+              }}
+            </p>
           </div>
           <!-- Dot -->
           <span
