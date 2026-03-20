@@ -48,6 +48,8 @@ export type SlimVersion = Pick<SlimPackumentVersion, 'version' | 'deprecated' | 
   hasProvenance?: boolean
   trustLevel?: PublishTrustLevel
   license?: string
+  /** Package type field — "module" indicates ESM */
+  type?: string
 }
 
 /**

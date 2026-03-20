@@ -99,6 +99,7 @@ export function transformPackument(
         deprecated: version.deprecated,
         tags: version.tags as string[],
         license: typeof versionLicense === 'string' ? versionLicense : undefined,
+        type: typeof version.type === 'string' ? version.type : undefined,
       }
     }
   }

@@ -168,6 +168,29 @@ const licenseChanges = computed(() => {
   return changes
 })
 
+// Detect ESM support changes (package "type" field) between consecutive versions
+const esmChanges = computed(() => {
+  const changes = new Map<string, 'added' | 'removed'>()
+  const entries = timelineEntries.value
+
+  for (let i = 0; i < entries.length - 1; i++) {
+    const current = pkg.value?.versions[entries[i]!.version]
+    const previous = pkg.value?.versions[entries[i + 1]!.version]
+    if (!current || !previous) continue
+
+    const currentIsEsm = current.type === 'module'
+    const previousIsEsm = previous.type === 'module'
+
+    if (currentIsEsm && !previousIsEsm) {
+      changes.set(entries[i]!.version, 'added')
+    } else if (!currentIsEsm && previousIsEsm) {
+      changes.set(entries[i]!.version, 'removed')
+    }
+  }
+
+  return changes
+})
+
 const bytesFormatter = useBytesFormatter()
 
 useSeoMeta({
@@ -270,6 +293,33 @@ useSeoMeta({
                   from: licenseChanges.get(entry.version)!.from,
                   to: licenseChanges.get(entry.version)!.to,
                 })
+              }}
+            </p>
+          </div>
+          <!-- ESM change -->
+          <div v-if="esmChanges.has(entry.version)" class="mb-4 -ms-6 ps-6 relative">
+            <span
+              class="absolute -start-2 flex items-center justify-center w-4 h-4 rounded-full border"
+              :class="
+                esmChanges.get(entry.version) === 'added'
+                  ? 'bg-green-500 border-green-600'
+                  : 'bg-amber-500 border-amber-600'
+              "
+            >
+              <span class="w-2.5 h-2.5 text-white i-lucide:package" aria-hidden="true" />
+            </span>
+            <p
+              class="text-sm"
+              :class="
+                esmChanges.get(entry.version) === 'added'
+                  ? 'text-green-700 dark:text-green-400'
+                  : 'text-amber-700 dark:text-amber-400'
+              "
+            >
+              {{
+                esmChanges.get(entry.version) === 'added'
+                  ? $t('package.timeline.esm_added')
+                  : $t('package.timeline.esm_removed')
               }}
             </p>
           </div>

@@ -1287,6 +1287,12 @@
             },
             "license_change": {
               "type": "string"
+            },
+            "esm_added": {
+              "type": "string"
+            },
+            "esm_removed": {
+              "type": "string"
             }
           },
           "additionalProperties": false
