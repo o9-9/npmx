@@ -214,115 +214,6 @@ useSeoMeta({
       <!-- Timeline -->
       <ol v-if="visibleEntries.length" class="relative border-s border-border ms-4">
         <li v-for="entry in visibleEntries" :key="entry.version" class="mb-6 ms-6">
-          <!-- Size event -->
-          <div v-if="sizeEvents.has(entry.version)" class="mb-4 -ms-6 ps-6 relative">
-            <span
-              class="absolute -start-2 flex items-center justify-center w-4 h-4 rounded-full border"
-              :class="
-                sizeEvents.get(entry.version)!.direction === 'decrease'
-                  ? 'bg-green-500 border-green-600'
-                  : 'bg-amber-500 border-amber-600'
-              "
-            >
-              <span
-                class="w-2.5 h-2.5 text-white"
-                :class="
-                  sizeEvents.get(entry.version)!.direction === 'decrease'
-                    ? 'i-lucide:trending-down'
-                    : 'i-lucide:trending-up'
-                "
-                aria-hidden="true"
-              />
-            </span>
-            <p
-              class="text-sm"
-              :class="
-                sizeEvents.get(entry.version)!.direction === 'decrease'
-                  ? 'text-green-700 dark:text-green-400'
-                  : 'text-amber-700 dark:text-amber-400'
-              "
-            >
-              <template v-if="sizeEvents.get(entry.version)!.sizeThresholdExceeded">
-                {{
-                  sizeEvents.get(entry.version)!.direction === 'decrease'
-                    ? $t('package.timeline.size_decrease', {
-                        percent: Math.abs(
-                          Math.round(sizeEvents.get(entry.version)!.sizeRatio * 100),
-                        ),
-                        size: bytesFormatter.format(
-                          Math.abs(sizeEvents.get(entry.version)!.sizeDelta),
-                        ),
-                      })
-                    : $t('package.timeline.size_increase', {
-                        percent: Math.round(sizeEvents.get(entry.version)!.sizeRatio * 100),
-                        size: bytesFormatter.format(sizeEvents.get(entry.version)!.sizeDelta),
-                      })
-                }}
-              </template>
-              <template
-                v-if="
-                  sizeEvents.get(entry.version)!.sizeThresholdExceeded &&
-                  sizeEvents.get(entry.version)!.depThresholdExceeded
-                "
-              >
-                &middot;
-              </template>
-              <template v-if="sizeEvents.get(entry.version)!.depThresholdExceeded">
-                {{
-                  sizeEvents.get(entry.version)!.depDiff > 0
-                    ? $t('package.timeline.dep_increase', {
-                        count: sizeEvents.get(entry.version)!.depDiff,
-                      })
-                    : $t('package.timeline.dep_decrease', {
-                        count: Math.abs(sizeEvents.get(entry.version)!.depDiff),
-                      })
-                }}
-              </template>
-            </p>
-          </div>
-          <!-- License change -->
-          <div v-if="licenseChanges.has(entry.version)" class="mb-4 -ms-6 ps-6 relative">
-            <span
-              class="absolute -start-2 flex items-center justify-center w-4 h-4 rounded-full border bg-amber-500 border-amber-600"
-            >
-              <span class="w-2.5 h-2.5 text-white i-lucide:scale" aria-hidden="true" />
-            </span>
-            <p class="text-sm text-amber-700 dark:text-amber-400">
-              {{
-                $t('package.timeline.license_change', {
-                  from: licenseChanges.get(entry.version)!.from,
-                  to: licenseChanges.get(entry.version)!.to,
-                })
-              }}
-            </p>
-          </div>
-          <!-- ESM change -->
-          <div v-if="esmChanges.has(entry.version)" class="mb-4 -ms-6 ps-6 relative">
-            <span
-              class="absolute -start-2 flex items-center justify-center w-4 h-4 rounded-full border"
-              :class="
-                esmChanges.get(entry.version) === 'added'
-                  ? 'bg-green-500 border-green-600'
-                  : 'bg-amber-500 border-amber-600'
-              "
-            >
-              <span class="w-2.5 h-2.5 text-white i-lucide:package" aria-hidden="true" />
-            </span>
-            <p
-              class="text-sm"
-              :class="
-                esmChanges.get(entry.version) === 'added'
-                  ? 'text-green-700 dark:text-green-400'
-                  : 'text-amber-700 dark:text-amber-400'
-              "
-            >
-              {{
-                esmChanges.get(entry.version) === 'added'
-                  ? $t('package.timeline.esm_added')
-                  : $t('package.timeline.esm_removed')
-              }}
-            </p>
-          </div>
           <!-- Dot -->
           <span
             class="absolute -start-2 flex items-center justify-center w-4 h-4 rounded-full border border-border"
@@ -354,6 +245,121 @@ useSeoMeta({
               day="numeric"
             />
           </div>
+          <!-- Sub-events branch -->
+          <ol
+            v-if="sizeEvents.has(entry.version) || licenseChanges.has(entry.version) || esmChanges.has(entry.version)"
+            class="relative border-s border-border/50 ms-3 mt-2"
+          >
+            <!-- Size event -->
+            <li v-if="sizeEvents.has(entry.version)" class="mb-2 ms-4 relative last:mb-0">
+              <span
+                class="absolute -start-[calc(1rem+0.375rem)] top-0.5 flex items-center justify-center w-3 h-3 rounded-full border"
+                :class="
+                  sizeEvents.get(entry.version)!.direction === 'decrease'
+                    ? 'bg-green-500 border-green-600'
+                    : 'bg-amber-500 border-amber-600'
+                "
+              >
+                <span
+                  class="w-2 h-2 text-white"
+                  :class="
+                    sizeEvents.get(entry.version)!.direction === 'decrease'
+                      ? 'i-lucide:trending-down'
+                      : 'i-lucide:trending-up'
+                  "
+                  aria-hidden="true"
+                />
+              </span>
+              <p
+                class="text-xs"
+                :class="
+                  sizeEvents.get(entry.version)!.direction === 'decrease'
+                    ? 'text-green-700 dark:text-green-400'
+                    : 'text-amber-700 dark:text-amber-400'
+                "
+              >
+                <template v-if="sizeEvents.get(entry.version)!.sizeThresholdExceeded">
+                  {{
+                    sizeEvents.get(entry.version)!.direction === 'decrease'
+                      ? $t('package.timeline.size_decrease', {
+                          percent: Math.abs(
+                            Math.round(sizeEvents.get(entry.version)!.sizeRatio * 100),
+                          ),
+                          size: bytesFormatter.format(
+                            Math.abs(sizeEvents.get(entry.version)!.sizeDelta),
+                          ),
+                        })
+                      : $t('package.timeline.size_increase', {
+                          percent: Math.round(sizeEvents.get(entry.version)!.sizeRatio * 100),
+                          size: bytesFormatter.format(sizeEvents.get(entry.version)!.sizeDelta),
+                        })
+                  }}
+                </template>
+                <template
+                  v-if="
+                    sizeEvents.get(entry.version)!.sizeThresholdExceeded &&
+                    sizeEvents.get(entry.version)!.depThresholdExceeded
+                  "
+                >
+                  &middot;
+                </template>
+                <template v-if="sizeEvents.get(entry.version)!.depThresholdExceeded">
+                  {{
+                    sizeEvents.get(entry.version)!.depDiff > 0
+                      ? $t('package.timeline.dep_increase', {
+                          count: sizeEvents.get(entry.version)!.depDiff,
+                        })
+                      : $t('package.timeline.dep_decrease', {
+                          count: Math.abs(sizeEvents.get(entry.version)!.depDiff),
+                        })
+                  }}
+                </template>
+              </p>
+            </li>
+            <!-- License change -->
+            <li v-if="licenseChanges.has(entry.version)" class="mb-2 ms-4 relative last:mb-0">
+              <span
+                class="absolute -start-[calc(1rem+0.375rem)] top-0.5 flex items-center justify-center w-3 h-3 rounded-full border bg-amber-500 border-amber-600"
+              >
+                <span class="w-2 h-2 text-white i-lucide:scale" aria-hidden="true" />
+              </span>
+              <p class="text-xs text-amber-700 dark:text-amber-400">
+                {{
+                  $t('package.timeline.license_change', {
+                    from: licenseChanges.get(entry.version)!.from,
+                    to: licenseChanges.get(entry.version)!.to,
+                  })
+                }}
+              </p>
+            </li>
+            <!-- ESM change -->
+            <li v-if="esmChanges.has(entry.version)" class="mb-2 ms-4 relative last:mb-0">
+              <span
+                class="absolute -start-[calc(1rem+0.375rem)] top-0.5 flex items-center justify-center w-3 h-3 rounded-full border"
+                :class="
+                  esmChanges.get(entry.version) === 'added'
+                    ? 'bg-green-500 border-green-600'
+                    : 'bg-amber-500 border-amber-600'
+                "
+              >
+                <span class="w-2 h-2 text-white i-lucide:package" aria-hidden="true" />
+              </span>
+              <p
+                class="text-xs"
+                :class="
+                  esmChanges.get(entry.version) === 'added'
+                    ? 'text-green-700 dark:text-green-400'
+                    : 'text-amber-700 dark:text-amber-400'
+                "
+              >
+                {{
+                  esmChanges.get(entry.version) === 'added'
+                    ? $t('package.timeline.esm_added')
+                    : $t('package.timeline.esm_removed')
+                }}
+              </p>
+            </li>
+          </ol>
         </li>
       </ol>
 
