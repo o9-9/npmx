@@ -1129,7 +1129,7 @@ const showSkeleton = shallowRef(false)
       'install sidebar'
       'vulns   sidebar'
       'readme  sidebar';
-    grid-template-rows: auto auto auto auto 1fr;
+    grid-template-rows: auto auto auto 1fr;
   }
 }
 
@@ -1142,6 +1142,7 @@ const showSkeleton = shallowRef(false)
       'install sidebar'
       'vulns   sidebar'
       'readme  sidebar';
+    grid-template-rows: auto auto auto 1fr;
   }
 }
 
