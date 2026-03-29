@@ -1,20 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import type * as FastNpmMeta from 'fast-npm-meta'
 import type * as NpmApi from '~/utils/npm/api'
 import VersionsPage from '~/pages/package/[[org]]/[name]/versions.vue'
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
-
-// Phase 1: lightweight version summary (page load)
-const mockGetVersions = vi.fn()
-vi.mock('fast-npm-meta', async importOriginal => {
-  const actual = await importOriginal<typeof FastNpmMeta>()
-  return {
-    ...actual,
-    getVersions: (...args: unknown[]) => mockGetVersions(...args),
-  }
-})
 
 // Phase 2: full metadata (loaded on first group expand)
 const mockFetchAllPackageVersions = vi.fn()
@@ -28,6 +17,9 @@ vi.mock('~/utils/npm/api', async importOriginal => {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+/**
+ * Build a mock response payload matching the fast-npm-meta /versions/ API shape.
+ */
 function makeVersionData(
   versions: string[],
   distTags: Record<string, string>,
@@ -42,6 +34,28 @@ function makeVersionData(
   }
 }
 
+/**
+ * Next response to return from the fast-npm-meta fetch mock.
+ * Set this before mounting the page.
+ */
+let nextFetchResponse: ReturnType<typeof makeVersionData> | null = null
+
+const originalFetch = globalThis.fetch
+
+function mockFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+  if (url.includes('npm.antfu.dev/versions/')) {
+    const body = nextFetchResponse ?? { distTags: {}, versions: [], time: {} }
+    return Promise.resolve(
+      new Response(JSON.stringify(body), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    )
+  }
+  return originalFetch(input, init)
+}
+
 async function mountPage(route = '/package/test-package/versions') {
   return mountSuspended(VersionsPage, { route })
 }
@@ -50,20 +64,25 @@ async function mountPage(route = '/package/test-package/versions') {
 
 describe('package versions page', () => {
   beforeEach(() => {
-    mockGetVersions.mockReset()
+    nextFetchResponse = null
     mockFetchAllPackageVersions.mockReset()
+    globalThis.fetch = mockFetch as typeof globalThis.fetch
     clearNuxtData()
+  })
+
+  afterEach(() => {
+    globalThis.fetch = originalFetch
   })
 
   describe('basic rendering', () => {
     it('renders the package name in the header', async () => {
-      mockGetVersions.mockResolvedValue(makeVersionData(['1.0.0'], { latest: '1.0.0' }))
+      nextFetchResponse = makeVersionData(['1.0.0'], { latest: '1.0.0' })
       const component = await mountPage()
       await vi.waitFor(() => expect(component.text()).toContain('test-package'))
     })
 
     it('renders "Version History" section with total count', async () => {
-      mockGetVersions.mockResolvedValue(makeVersionData(['2.0.0', '1.0.0'], { latest: '2.0.0' }))
+      nextFetchResponse = makeVersionData(['2.0.0', '1.0.0'], { latest: '2.0.0' })
       const component = await mountPage()
       await vi.waitFor(() => {
         expect(component.text()).toContain('Version History')
@@ -74,7 +93,7 @@ describe('package versions page', () => {
 
   describe('current tags section', () => {
     it('renders latest version in the featured card', async () => {
-      mockGetVersions.mockResolvedValue(makeVersionData(['2.0.0', '1.0.0'], { latest: '2.0.0' }))
+      nextFetchResponse = makeVersionData(['2.0.0', '1.0.0'], { latest: '2.0.0' })
       const component = await mountPage()
       await vi.waitFor(() => {
         expect(component.text()).toContain('latest')
@@ -83,13 +102,11 @@ describe('package versions page', () => {
     })
 
     it('renders non-latest dist-tags in compact list', async () => {
-      mockGetVersions.mockResolvedValue(
-        makeVersionData(['2.0.0', '1.0.0', '1.0.0-beta.1'], {
-          latest: '2.0.0',
-          stable: '1.0.0',
-          beta: '1.0.0-beta.1',
-        }),
-      )
+      nextFetchResponse = makeVersionData(['2.0.0', '1.0.0', '1.0.0-beta.1'], {
+        latest: '2.0.0',
+        stable: '1.0.0',
+        beta: '1.0.0-beta.1',
+      })
       const component = await mountPage()
       await vi.waitFor(() => {
         expect(component.text()).toContain('stable')
@@ -100,9 +117,7 @@ describe('package versions page', () => {
 
   describe('version history groups', () => {
     it('renders group headers for each major version', async () => {
-      mockGetVersions.mockResolvedValue(
-        makeVersionData(['2.1.0', '2.0.0', '1.0.0'], { latest: '2.1.0' }),
-      )
+      nextFetchResponse = makeVersionData(['2.1.0', '2.0.0', '1.0.0'], { latest: '2.1.0' })
       const component = await mountPage()
       await vi.waitFor(() => {
         expect(component.text()).toContain('2.x')
@@ -111,9 +126,7 @@ describe('package versions page', () => {
     })
 
     it('groups 0.x versions by major.minor (not just major)', async () => {
-      mockGetVersions.mockResolvedValue(
-        makeVersionData(['0.10.1', '0.10.0', '0.9.0'], { latest: '0.10.1' }),
-      )
+      nextFetchResponse = makeVersionData(['0.10.1', '0.10.0', '0.9.0'], { latest: '0.10.1' })
       const component = await mountPage()
       await vi.waitFor(() => {
         expect(component.text()).toContain('0.10.x')
@@ -124,7 +137,7 @@ describe('package versions page', () => {
 
   describe('group expand / collapse', () => {
     it('expands a group and shows version rows on click', async () => {
-      mockGetVersions.mockResolvedValue(makeVersionData(['1.1.0', '1.0.0'], { latest: '1.1.0' }))
+      nextFetchResponse = makeVersionData(['1.1.0', '1.0.0'], { latest: '1.1.0' })
       mockFetchAllPackageVersions.mockResolvedValue([
         { version: '1.1.0', time: '2024-01-15T00:00:00.000Z', hasProvenance: false },
         { version: '1.0.0', time: '2024-01-10T00:00:00.000Z', hasProvenance: false },
@@ -141,7 +154,7 @@ describe('package versions page', () => {
     })
 
     it('only fetches full metadata once across multiple group expansions', async () => {
-      mockGetVersions.mockResolvedValue(makeVersionData(['2.0.0', '1.0.0'], { latest: '2.0.0' }))
+      nextFetchResponse = makeVersionData(['2.0.0', '1.0.0'], { latest: '2.0.0' })
       mockFetchAllPackageVersions.mockResolvedValue([
         { version: '2.0.0', time: '2024-01-15T00:00:00.000Z', hasProvenance: false },
         { version: '1.0.0', time: '2024-01-10T00:00:00.000Z', hasProvenance: false },
@@ -163,9 +176,7 @@ describe('package versions page', () => {
   describe('version filter', () => {
     it('filters groups by substring match', async () => {
       // Use versions where the filter string "1.0" is unique to the 1.x group
-      mockGetVersions.mockResolvedValue(
-        makeVersionData(['3.0.0', '2.0.0', '1.0.0'], { latest: '3.0.0' }),
-      )
+      nextFetchResponse = makeVersionData(['3.0.0', '2.0.0', '1.0.0'], { latest: '3.0.0' })
       const component = await mountPage()
       await vi.waitFor(() => {
         expect(component.text()).toContain('1.x')
