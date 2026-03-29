@@ -399,6 +399,24 @@ describe('useCommandPaletteCommands', () => {
     wrapper.unmount()
   })
 
+  it('persists the selected locale to settings when changing language via the palette', async () => {
+    const { wrapper, flatCommands } = await captureCommandPalette({
+      view: 'languages',
+    })
+    const { settings } = useSettings()
+    expect(settings.value.selectedLocale).toBeNull()
+
+    const frCommand = flatCommands.value.find(command => command.id === 'locale:fr-FR')
+    expect(frCommand).toBeTruthy()
+    await frCommand?.action?.()
+
+    expect(settings.value.selectedLocale).toBe('fr-FR')
+
+    // Clean up
+    settings.value.selectedLocale = null
+    wrapper.unmount()
+  })
+
   it('does not inject version overrides into unrelated palette subviews', async () => {
     const { wrapper, groupedCommands, flatCommands } = await captureCommandPalette({
       view: 'languages',

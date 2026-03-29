@@ -152,6 +152,8 @@ export function useCommandPaletteGlobalCommands({
         activeLabel: code === locale.value ? t('command_palette.current') : null,
         action: runThenAnnounce(
           async () => {
+            // TODO(serhalp): Extract a shared composable that wraps setLocale to always persist to settings
+            settings.value.selectedLocale = code
             await setLocale(code)
           },
           () =>
