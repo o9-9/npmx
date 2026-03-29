@@ -52,6 +52,7 @@ const closeModal = () => modalRef.value?.close?.()
             </button>
 
             <Modal
+              id="keyboard-shortcuts-modal"
               ref="modalRef"
               :modalTitle="$t('footer.keyboard_shortcuts')"
               class="w-auto max-w-lg"
