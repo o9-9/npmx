@@ -514,9 +514,12 @@ export function useCommandPaletteGlobalCommands({
             t('command_palette.connections.npm_connected', { username: npmUsername }),
           ],
           iconClass: 'i-lucide:plug-zap',
-          action: closeThen(() => {
-            disconnectNpm()
-          }),
+          action: runThenAnnounce(
+            () => {
+              disconnectNpm()
+            },
+            () => t('command_palette.announcements.npm_disconnected'),
+          ),
         },
         {
           id: 'my-packages',
@@ -572,9 +575,12 @@ export function useCommandPaletteGlobalCommands({
             }),
           ],
           iconClass: 'i-lucide:log-out',
-          action: closeThen(async () => {
-            await logout()
-          }),
+          action: runThenAnnounce(
+            async () => {
+              await logout()
+            },
+            () => t('command_palette.announcements.atmosphere_disconnected'),
+          ),
         },
         {
           id: 'my-profile',

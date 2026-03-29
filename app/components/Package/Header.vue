@@ -81,6 +81,8 @@ function hasProvenance(version: PackumentVersion | null): boolean {
   return !!(version.dist as { attestations?: unknown }).attestations
 }
 
+const { announce } = useCommandPalette()
+
 useCommandPaletteContextCommands(
   computed((): CommandPaletteContextCommandInput[] => {
     if (!packageName.value) return []
@@ -94,6 +96,7 @@ useCommandPaletteContextCommands(
         iconClass: 'i-lucide:copy',
         action: () => {
           copyPkgName()
+          announce($t('command_palette.announcements.copied_to_clipboard'))
         },
       },
     ]

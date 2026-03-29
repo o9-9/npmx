@@ -136,6 +136,8 @@ function exportComparisonDataAsMarkdown() {
   copy(markdown)
 }
 
+const { announce } = useCommandPalette()
+
 useCommandPaletteContextCommands(
   computed((): CommandPaletteContextCommandInput[] => {
     const commands: CommandPaletteContextCommandInput[] = [
@@ -147,6 +149,7 @@ useCommandPaletteContextCommands(
         iconClass: 'i-lucide:list-checks',
         action: () => {
           selectAll()
+          announce($t('command_palette.announcements.facets_all_selected'))
         },
       },
       {
@@ -157,6 +160,7 @@ useCommandPaletteContextCommands(
         iconClass: 'i-lucide:list-x',
         action: () => {
           deselectAll()
+          announce($t('command_palette.announcements.facets_all_deselected'))
         },
       },
     ]
@@ -170,6 +174,7 @@ useCommandPaletteContextCommands(
         iconClass: 'i-lucide:copy',
         action: () => {
           exportComparisonDataAsMarkdown()
+          announce($t('command_palette.announcements.copied_to_clipboard'))
         },
       })
     }
@@ -185,6 +190,11 @@ useCommandPaletteContextCommands(
           active: comparisonView.value === 'table',
           action: () => {
             comparisonView.value = 'table'
+            announce(
+              $t('command_palette.announcements.view_switched', {
+                view: $t('compare.packages.table_view'),
+              }),
+            )
           },
         },
         {
@@ -196,6 +206,11 @@ useCommandPaletteContextCommands(
           active: comparisonView.value === 'charts',
           action: () => {
             comparisonView.value = 'charts'
+            announce(
+              $t('command_palette.announcements.view_switched', {
+                view: $t('compare.packages.charts_view'),
+              }),
+            )
           },
         },
       )

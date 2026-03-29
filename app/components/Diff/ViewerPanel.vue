@@ -88,6 +88,8 @@ function getCodeUrl(version: string): string {
   return `/package-code/${props.packageName}/v/${version}/${props.file.path}`
 }
 
+const { announce } = useCommandPalette()
+
 useCommandPaletteContextCommands(
   computed((): CommandPaletteContextCommandInput[] => [
     {
@@ -101,6 +103,14 @@ useCommandPaletteContextCommands(
         : $t('command_palette.state.off'),
       action: () => {
         mergeModifiedLines.value = !mergeModifiedLines.value
+        announce(
+          $t(
+            mergeModifiedLines.value
+              ? 'command_palette.announcements.setting_on'
+              : 'command_palette.announcements.setting_off',
+            { setting: $t('command_palette.diff.merge_modified_lines') },
+          ),
+        )
       },
     },
     {
@@ -112,6 +122,14 @@ useCommandPaletteContextCommands(
       badge: wordWrap.value ? $t('command_palette.state.on') : $t('command_palette.state.off'),
       action: () => {
         wordWrap.value = !wordWrap.value
+        announce(
+          $t(
+            wordWrap.value
+              ? 'command_palette.announcements.setting_on'
+              : 'command_palette.announcements.setting_off',
+            { setting: $t('command_palette.diff.word_wrap') },
+          ),
+        )
       },
     },
   ]),

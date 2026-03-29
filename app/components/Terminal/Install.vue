@@ -125,6 +125,8 @@ const copyDevInstallCommand = () =>
     }),
   )
 
+const { announce } = useCommandPalette()
+
 useCommandPaletteContextCommands(
   computed((): CommandPaletteContextCommandInput[] => {
     const commands: CommandPaletteContextCommandInput[] = [
@@ -136,6 +138,7 @@ useCommandPaletteContextCommands(
         iconClass: 'i-lucide:copy',
         action: () => {
           copyInstallCommand()
+          announce($t('command_palette.announcements.copied_to_clipboard'))
         },
       },
     ]
@@ -149,6 +152,7 @@ useCommandPaletteContextCommands(
         iconClass: 'i-lucide:copy-plus',
         action: () => {
           copyDevInstallCommand()
+          announce($t('command_palette.announcements.copied_to_clipboard'))
         },
       })
     }
@@ -162,6 +166,7 @@ useCommandPaletteContextCommands(
         iconClass: 'i-lucide:terminal-square',
         action: () => {
           copyRunCommand(props.executableInfo?.primaryCommand)
+          announce($t('command_palette.announcements.copied_to_clipboard'))
         },
       })
     }
@@ -175,6 +180,7 @@ useCommandPaletteContextCommands(
         iconClass: 'i-lucide:wand-sparkles',
         action: () => {
           copyCreateCommand()
+          announce($t('command_palette.announcements.copied_to_clipboard'))
         },
       })
     }

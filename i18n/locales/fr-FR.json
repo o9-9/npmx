@@ -175,7 +175,16 @@
       "relative_dates_off": "Dates relatives désactivées.",
       "theme_changed": "Thème {theme}.",
       "accent_color_changed": "Couleur d’accentuation {color}.",
-      "background_theme_changed": "Couleur d’arrière-plan {theme}."
+      "background_theme_changed": "Couleur d’arrière-plan {theme}.",
+      "download_started": "Téléchargement du tarball de {package}.",
+      "copied_to_clipboard": "Copié dans le presse-papiers.",
+      "npm_disconnected": "npm CLI déconnecté.",
+      "atmosphere_disconnected": "Atmosphere déconnecté.",
+      "facets_all_selected": "Toutes les facettes sélectionnées.",
+      "facets_all_deselected": "Toutes les facettes désélectionnées.",
+      "view_switched": "Vue {view} activée.",
+      "setting_on": "{setting} activé.",
+      "setting_off": "{setting} désactivé."
     }
   },
   "nav": {
