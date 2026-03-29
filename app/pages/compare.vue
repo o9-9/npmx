@@ -74,7 +74,9 @@ function addNoDep() {
 // Get loading state for each column
 const columnLoading = computed(() => packages.value.map((_, i) => isColumnLoading(i)))
 
-// Check if we have enough packages to compare
+// FIXME(serhalp): canCompare only checks package count, not whether data has loaded.
+// Copy-markdown and view-switching commands appear as soon as one package loads, even if
+// other packages are still loading. The UI copy button has the same issue.
 const canCompare = computed(() => packages.value.length >= 2)
 
 const comparisonView = usePermalink<'table' | 'charts'>('view', 'table')
@@ -165,7 +167,7 @@ useCommandPaletteContextCommands(
       },
     ]
 
-    if (packagesData.value && packagesData.value.some(p => p !== null)) {
+    if (canCompare.value && packagesData.value && packagesData.value.some(p => p !== null)) {
       commands.push({
         id: 'compare-copy-markdown',
         group: 'actions',
