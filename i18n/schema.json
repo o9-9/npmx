@@ -534,6 +534,27 @@
             },
             "download_started": {
               "type": "string"
+            },
+            "copied_to_clipboard": {
+              "type": "string"
+            },
+            "npm_disconnected": {
+              "type": "string"
+            },
+            "atmosphere_disconnected": {
+              "type": "string"
+            },
+            "facets_all_selected": {
+              "type": "string"
+            },
+            "facets_all_deselected": {
+              "type": "string"
+            },
+            "view_switched": {
+              "type": "string"
+            },
+            "setting_toggled": {
+              "type": "string"
             }
           },
           "additionalProperties": false

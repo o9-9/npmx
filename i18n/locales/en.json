@@ -183,8 +183,7 @@
       "facets_all_selected": "All facets selected.",
       "facets_all_deselected": "All facets deselected.",
       "view_switched": "Switched to {view} view.",
-      "setting_on": "{setting} on.",
-      "setting_off": "{setting} off."
+      "setting_toggled": "{setting} {state}."
     }
   },
   "nav": {

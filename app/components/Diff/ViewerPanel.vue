@@ -104,12 +104,12 @@ useCommandPaletteContextCommands(
       action: () => {
         mergeModifiedLines.value = !mergeModifiedLines.value
         announce(
-          $t(
-            mergeModifiedLines.value
-              ? 'command_palette.announcements.setting_on'
-              : 'command_palette.announcements.setting_off',
-            { setting: $t('command_palette.diff.merge_modified_lines') },
-          ),
+          $t('command_palette.announcements.setting_toggled', {
+            setting: $t('command_palette.diff.merge_modified_lines'),
+            state: $t(
+              mergeModifiedLines.value ? 'command_palette.state.on' : 'command_palette.state.off',
+            ),
+          }),
         )
       },
     },
@@ -123,12 +123,10 @@ useCommandPaletteContextCommands(
       action: () => {
         wordWrap.value = !wordWrap.value
         announce(
-          $t(
-            wordWrap.value
-              ? 'command_palette.announcements.setting_on'
-              : 'command_palette.announcements.setting_off',
-            { setting: $t('command_palette.diff.word_wrap') },
-          ),
+          $t('command_palette.announcements.setting_toggled', {
+            setting: $t('command_palette.diff.word_wrap'),
+            state: $t(wordWrap.value ? 'command_palette.state.on' : 'command_palette.state.off'),
+          }),
         )
       },
     },

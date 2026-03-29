@@ -183,8 +183,7 @@
       "facets_all_selected": "Toutes les facettes sélectionnées.",
       "facets_all_deselected": "Toutes les facettes désélectionnées.",
       "view_switched": "Vue {view} activée.",
-      "setting_on": "{setting} activé.",
-      "setting_off": "{setting} désactivé."
+      "setting_toggled": "{setting} {state}."
     }
   },
   "nav": {
