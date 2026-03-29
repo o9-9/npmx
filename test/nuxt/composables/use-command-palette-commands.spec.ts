@@ -336,7 +336,7 @@ describe('useCommandPaletteCommands', () => {
       },
     })
 
-    expect(flatCommands.value.find(command => command.id === 'search')).toBeTruthy()
+    expect(flatCommands.value.find(command => command.id === 'search-query')).toBeTruthy()
     expect(
       groupedCommands.value.find(group => group.id === 'versions')?.items.map(item => item.id),
     ).toEqual(['version:3.4.2', 'version:3.5.0'])
@@ -378,8 +378,8 @@ describe('useCommandPaletteCommands', () => {
       query: 'webpack',
     })
 
-    expect(flatCommands.value.find(command => command.id === 'search')).toBeTruthy()
-    expect(flatCommands.value.at(-1)?.id).toBe('search')
+    expect(flatCommands.value.find(command => command.id === 'search-query')).toBeTruthy()
+    expect(flatCommands.value.at(-1)?.id).toBe('search-query')
     expect(flatCommands.value.at(-1)?.label).toBe('Search for "webpack"')
 
     wrapper.unmount()

@@ -85,9 +85,7 @@ export function useCommandPaletteCommands() {
   }
 
   const trimmedQuery = computed(() => query.value.trim())
-  const { globalCommands, viewDefinitions } = useCommandPaletteGlobalCommands({
-    submitSearchQuery,
-  })
+  const { globalCommands, viewDefinitions } = useCommandPaletteGlobalCommands()
   const currentViewDefinition = computed(() =>
     view.value === 'root' ? null : viewDefinitions.value[view.value],
   )
@@ -126,13 +124,13 @@ export function useCommandPaletteCommands() {
   const trailingSearchCommand = computed<CommandPaletteCommand | null>(() => {
     if (view.value !== 'root' || !trimmedQuery.value) return null
 
-    const searchCommand = rootViewCommands.value.find(command => command.id === 'search')
-    if (!searchCommand) return null
-
     return {
-      ...searchCommand,
+      id: 'search-query',
+      group: 'actions' as const,
       label: t('command_palette.actions.search_for', { query: trimmedQuery.value }),
-      keywords: [...searchCommand.keywords, trimmedQuery.value],
+      keywords: [t('search.title_packages'), t('search.label'), trimmedQuery.value],
+      iconClass: 'i-lucide:search',
+      action: submitSearchQuery,
     }
   })
 

@@ -6,10 +6,6 @@ import {
   NPMX_DOCS_SITE,
 } from '#shared/utils/constants'
 
-interface UseCommandPaletteGlobalCommandsOptions {
-  submitSearchQuery: () => Promise<void>
-}
-
 type CommandPaletteSubview = Exclude<CommandPaletteView, 'root'>
 
 interface CommandPaletteViewDefinition {
@@ -73,9 +69,7 @@ function withRootSearchLabel(command: CommandPaletteCommand, label: string): Com
   }
 }
 
-export function useCommandPaletteGlobalCommands({
-  submitSearchQuery,
-}: UseCommandPaletteGlobalCommandsOptions) {
+export function useCommandPaletteGlobalCommands() {
   const { locale, locales, setLocale, t } = useI18n()
   const route = useRoute()
   const colorMode = useColorMode()
@@ -219,7 +213,9 @@ export function useCommandPaletteGlobalCommands({
         label: t('command_palette.actions.search'),
         keywords: [t('search.title_packages'), t('search.label')],
         iconClass: 'i-lucide:search',
-        action: submitSearchQuery,
+        active: route.name === 'search',
+        activeLabel: activeLabel(route.name === 'search', t('command_palette.here')),
+        to: { name: 'search' },
       },
       {
         id: 'keyboard-shortcuts',
