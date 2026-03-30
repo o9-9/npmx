@@ -364,13 +364,13 @@ useEventListener(document, 'keydown', handleGlobalKeydown)
                   <component
                     :is="getCommandComponent(command)"
                     v-bind="getCommandAttrs(command)"
-                    class="block min-h-12 w-full rounded-lg border border-transparent px-3 py-2 text-start no-underline text-inherit transition-colors duration-150 hover:border-border/80 hover:bg-bg focus-visible:border-border/80 focus-visible:bg-bg focus-visible:outline-accent/70"
+                    class="flex items-center min-h-12 w-full rounded-lg border border-transparent px-3 py-2 text-start no-underline text-inherit transition-colors duration-150 hover:border-border/80 hover:bg-bg focus-visible:border-border/80 focus-visible:bg-bg focus-visible:outline-accent/70"
                     data-command-item="true"
                     :data-command-id="command.id"
                     :aria-current="command.active ? 'true' : undefined"
                     @click="handleCommandClick(command)"
                   >
-                    <span class="flex items-center gap-3">
+                    <span class="flex items-center gap-3 w-full">
                       <span
                         class="inline-block h-4 w-4 shrink-0 text-fg-subtle"
                         :class="command.iconClass"
@@ -419,13 +419,13 @@ useEventListener(document, 'keydown', handleGlobalKeydown)
                 <component
                   :is="getCommandComponent(command)"
                   v-bind="getCommandAttrs(command)"
-                  class="block min-h-12 w-full rounded-xl border border-border/70 bg-bg-subtle/70 px-3 py-2 text-start no-underline text-inherit transition-colors duration-150 hover:border-border/80 hover:bg-bg focus-visible:border-border/80 focus-visible:bg-bg focus-visible:outline-accent/70"
+                  class="flex items-center min-h-12 w-full rounded-xl border border-border/70 bg-bg-subtle/70 px-3 py-2 text-start no-underline text-inherit transition-colors duration-150 hover:border-border/80 hover:bg-bg focus-visible:border-border/80 focus-visible:bg-bg focus-visible:outline-accent/70"
                   data-command-item="true"
                   :data-command-id="command.id"
                   :aria-current="command.active ? 'true' : undefined"
                   @click="handleCommandClick(command)"
                 >
-                  <span class="flex items-center gap-3">
+                  <span class="flex items-center gap-3 w-full">
                     <span
                       class="inline-block h-4 w-4 shrink-0 text-fg-subtle"
                       :class="command.iconClass"
