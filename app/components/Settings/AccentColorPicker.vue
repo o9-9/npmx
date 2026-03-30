@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { DEFAULT_ACCENT_COLOR_OPTION_ID, useAccentColor } from '~/composables/useSettings'
+import { useAccentColor } from '~/composables/useSettings'
 
 const { accentColors, selectedAccentColorOptionId, setAccentColor } = useAccentColor()
 
 onPrehydrate(el => {
   const settings = JSON.parse(localStorage.getItem('npmx-settings') || '{}')
-  const defaultId = DEFAULT_ACCENT_COLOR_OPTION_ID
+  // Hardcoded — onPrehydrate is serialized into a <script> tag and cannot reference imports
+  const defaultId = 'neutral'
   const id = settings.accentColorId ?? defaultId
   if (id) {
     const input = el.querySelector<HTMLInputElement>(`input[value="${id}"]`)

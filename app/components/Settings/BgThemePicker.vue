@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { DEFAULT_BACKGROUND_THEME_OPTION_ID, useBackgroundTheme } from '~/composables/useSettings'
-
 const { backgroundThemes, selectedBackgroundThemeOptionId, setBackgroundTheme } =
   useBackgroundTheme()
 
 onPrehydrate(el => {
   const settings = JSON.parse(localStorage.getItem('npmx-settings') || '{}')
-  const defaultId = DEFAULT_BACKGROUND_THEME_OPTION_ID
+  // Hardcoded — onPrehydrate is serialized into a <script> tag and cannot reference imports
+  const defaultId = 'neutral'
   const id = settings.preferredBackgroundTheme ?? defaultId
   if (id) {
     const input = el.querySelector<HTMLInputElement>(`input[value="${id}"]`)
