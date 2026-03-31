@@ -165,7 +165,7 @@ describe('useCommandPaletteCommands', () => {
     expect(flatCommands.value.find(command => command.id === 'theme-system')?.active).toBe(true)
     expect(flatCommands.value.find(command => command.id === 'theme-dark')).toBeTruthy()
     expect(flatCommands.value.find(command => command.id === 'accent-colors')?.badge).toBe(
-      'Neutral',
+      'Sky',
     )
     expect(flatCommands.value.find(command => command.id === 'background-themes')?.badge).toBe(
       'Neutral',
@@ -441,7 +441,7 @@ describe('useCommandPaletteCommands', () => {
     })
 
     expect(groupedCommands.value.map(group => group.id)).toEqual(['settings'])
-    expect(flatCommands.value.find(command => command.id === 'accent-color:neutral')?.active).toBe(
+    expect(flatCommands.value.find(command => command.id === 'accent-color:sky')?.active).toBe(
       true,
     )
     expect(flatCommands.value.find(command => command.id === 'accent-color:coral')).toBeTruthy()
