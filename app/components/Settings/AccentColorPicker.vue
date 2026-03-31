@@ -6,7 +6,7 @@ const { accentColors, selectedAccentColorOptionId, setAccentColor } = useAccentC
 onPrehydrate(el => {
   const settings = JSON.parse(localStorage.getItem('npmx-settings') || '{}')
   // Hardcoded — onPrehydrate is serialized into a <script> tag and cannot reference imports
-  const defaultId = 'neutral'
+  const defaultId = 'sky'
   const id = settings.accentColorId ?? defaultId
   if (id) {
     const input = el.querySelector<HTMLInputElement>(`input[value="${id}"]`)

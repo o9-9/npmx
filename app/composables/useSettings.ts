@@ -76,7 +76,7 @@ const DEFAULT_SETTINGS: AppSettings = {
 
 export const DEFAULT_ACCENT_COLOR_ID = DEFAULT_SETTINGS.accentColorId
 export const DEFAULT_BACKGROUND_THEME_ID = DEFAULT_SETTINGS.preferredBackgroundTheme
-export const DEFAULT_ACCENT_COLOR_OPTION_ID: AccentColorId = DEFAULT_ACCENT_COLOR_ID ?? 'neutral'
+export const DEFAULT_ACCENT_COLOR_OPTION_ID: AccentColorId = DEFAULT_ACCENT_COLOR_ID ?? 'sky'
 export const DEFAULT_BACKGROUND_THEME_OPTION_ID: BackgroundThemeId =
   DEFAULT_BACKGROUND_THEME_ID ?? 'neutral'
 
