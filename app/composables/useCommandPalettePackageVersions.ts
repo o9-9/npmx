@@ -6,14 +6,14 @@ export function useCommandPalettePackageVersions(
 ) {
   const versions = shallowRef<string[] | null>(null)
   let pendingLoad: Promise<void> | null = null
-  let loadToken = 0
+  let invalidationToken = 0
 
   watch(
     () => toValue(packageName),
     () => {
       versions.value = null
       pendingLoad = null
-      loadToken += 1
+      invalidationToken += 1
     },
   )
 
@@ -22,12 +22,12 @@ export function useCommandPalettePackageVersions(
     if (!resolvedPackageName || versions.value) return
     if (pendingLoad) return pendingLoad
 
-    const requestToken = ++loadToken
+    const token = invalidationToken
 
     async function doLoad(name: string) {
       try {
         const allVersions = await fetchAllPackageVersions(name)
-        if (requestToken !== loadToken || toValue(packageName) !== name) return
+        if (token !== invalidationToken) return
         versions.value = allVersions.map(version => version.version)
       } finally {
         if (pendingLoad === load) {
