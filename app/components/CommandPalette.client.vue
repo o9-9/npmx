@@ -284,12 +284,15 @@ useEventListener(document, 'keydown', handleGlobalKeydown)
       {{ announcement }}
     </p>
 
+    <!-- noScroll: the results div handles its own scroll; without this, Safari shows
+         a second scrollbar on the dialog element -->
     <Modal
       ref="modalRef"
       :id="dialogId"
       :modalTitle="$t('command_palette.title')"
       :modalSubtitle="viewMeta.subtitle"
-      class="mx-auto mb-0 mt-4 max-w-[48rem] overflow-hidden p-0 sm:mt-[10vh]"
+      class="mx-auto mb-0 mt-4 max-w-[48rem] p-0 sm:mt-[10vh]"
+      no-scroll
       @close="handleDialogClose"
     >
       <div v-if="isOpen" class="-mx-6 -mt-6">
